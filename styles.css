@@ -1,0 +1,38 @@
+/* Graphviz Plus: styles the plugin always ships.
+ *
+ * This file covers the block container, the loading line and the error box.
+ * Node and edge colors belong in your own CSS snippet: see graphs/graphviz.css.
+ */
+
+.block-language-dot {
+  text-align: center; /* inherited by .graphviz-plus and the SVG inside it */
+  overflow-x: auto;
+}
+
+.graphviz-plus svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.graphviz-plus-loading {
+  color: var(--text-faint);
+  font-size: var(--font-ui-small);
+  padding: 0.5em;
+}
+
+.graphviz-plus-error {
+  color: var(--text-error);
+  background: var(--background-secondary);
+  white-space: pre-wrap;
+  text-align: left;
+  padding: 0.6em 0.8em;
+  border-radius: 6px;
+  font-size: var(--font-ui-small);
+}
+
+/* Settings tab: says whether the preamble note path names a note. */
+.graphviz-plus-setting-status {
+  color: var(--text-muted);
+  font-size: var(--font-ui-smaller);
+  margin: -0.6em 0 1em;
+}

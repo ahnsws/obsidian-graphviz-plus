@@ -1,0 +1,9 @@
+{
+  "id": "graphviz-plus",
+  "name": "Graphviz Plus",
+  "version": "0.1.0",
+  "minAppVersion": "1.5.0",
+  "description": "Render Graphviz/DOT diagrams in Obsidian (desktop + mobile) via WebAssembly, with a shared-style preamble and global CSS theming.",
+  "author": "ahnsw",
+  "isDesktopOnly": false
+}
