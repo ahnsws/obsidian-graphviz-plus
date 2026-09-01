@@ -1,7 +1,8 @@
 /* Graphviz Plus: styles the plugin always ships.
  *
  * This file covers the block container, the loading line and the error box.
- * Node and edge colors belong in your own CSS snippet: see graphs/graphviz.css.
+ * Node and edge colors belong in your own CSS snippet:
+ * see examples/graphviz.css.
  */
 
 .block-language-dot {

@@ -2,3 +2,7 @@ node_modules/
 main.js
 *.js.map
 .DS_Store
+
+# exclude examples/ for now, until I personally verify them
+examples/
+docs/
