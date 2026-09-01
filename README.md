@@ -3,7 +3,12 @@
 An Obsidian plugin that renders graphviz diagrams written in DOT, the graphviz
 graph description language.
 
-Note: written with the assistance of Claude Code.
+Note: written with the assistance of Claude Code; note that this has not been
+robustly tested, and is only meant as a plugin for my personal use. However,
+please feel free to open a feature request or submit a pull request if it is
+lacking.
+
+## Details
 
 The plugin runs graphviz as WebAssembly in a Web Worker. There's no need to
 install graphviz on your machine, and the plugin (should) work on both desktop
@@ -28,16 +33,6 @@ machine.
 2. in BRAT, select **Add beta plugin**
 3. enter this repository's github URL, then click **Add**
 4. open **Settings > Community plugins** and turn on **Graphviz Plus**
-
-### Development notes
-
-BRAT reads the assets of the latest github release, so the repository needs at
-least one release that carries `main.js`, `manifest.json`, and `styles.css`. The
-workflow in `.github/workflows/release.yml` builds and attaches those three
-files when you push a tag.
-
-To install without BRAT, copy those same three files into
-`<vault>/.obsidian/plugins/graphviz-plus/`.
 
 ## Example
 
@@ -239,6 +234,16 @@ saves you the "Reload app without saving" command.
 
 `npm run build` type-checks the source and writes the `main.js` that ships in a
 release.
+
+### Release
+
+BRAT reads the assets of the latest github release, so the repository needs at
+least one release that carries `main.js`, `manifest.json`, and `styles.css`. The
+workflow in `.github/workflows/release.yml` builds and attaches those three
+files when you push a tag.
+
+To install without BRAT, copy those same three files into
+`<vault>/.obsidian/plugins/graphviz-plus/`.
 
 ### Tests and release checks
 
