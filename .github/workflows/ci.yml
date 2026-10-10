@@ -20,5 +20,10 @@ jobs:
           node-version: "20.x"
           cache: npm
       - run: npm ci
+      - run: npm run format:check
       - run: npm test
       - run: npm run build
+      - name: Offline browser worker smoke check
+        run: npm run test:browser
+        env:
+          GRAPHVIZ_CHROME: google-chrome

@@ -7,7 +7,13 @@
     "dev": "node esbuild.config.mjs",
     "build": "npm run check && node esbuild.config.mjs production",
     "check": "tsc -noEmit -skipLibCheck && node scripts/check-versions.mjs",
-    "test": "node scripts/run-tests.mjs"
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "npm run format:check && npm run check",
+    "hooks:install": "node scripts/install-hooks.mjs",
+    "prepare": "node scripts/install-hooks.mjs",
+    "test": "node scripts/run-tests.mjs",
+    "test:browser": "node scripts/browser-smoke.mjs"
   },
   "keywords": [
     "obsidian",
@@ -18,15 +24,16 @@
   ],
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^20.11.0",
+    "@types/node": "^24.19.0",
     "@xmldom/xmldom": "^0.9.12",
-    "builtin-modules": "^3.3.0",
+    "builtin-modules": "^5.4.0",
     "esbuild": "^0.28.2",
-    "obsidian": "latest",
-    "tslib": "^2.6.2",
-    "typescript": "^5.4.5"
+    "obsidian": "^1.14.4",
+    "prettier": "^3.9.10",
+    "tslib": "^2.8.1",
+    "typescript": "^7.0.2"
   },
   "dependencies": {
-    "@hpcc-js/wasm-graphviz": "^1.27.0"
+    "@hpcc-js/wasm-graphviz": "^1.29.0"
   }
 }

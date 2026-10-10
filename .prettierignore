@@ -1,0 +1,8 @@
+# Generated bundle and machine-managed dependency metadata.
+main.js
+*.js.map
+package-lock.json
+
+# Untracked personal material.
+docs/
+examples/

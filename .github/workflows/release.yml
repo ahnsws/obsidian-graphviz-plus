@@ -24,8 +24,14 @@ jobs:
           RELEASE_TAG: ${{ github.ref_name }}
         run: |
           npm ci
+          npm run format:check
           npm test
           npm run build
+
+      - name: Offline browser worker smoke check
+        run: npm run test:browser
+        env:
+          GRAPHVIZ_CHROME: google-chrome
 
       - name: Create release
         env:

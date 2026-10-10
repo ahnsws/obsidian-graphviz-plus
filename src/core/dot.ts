@@ -27,7 +27,7 @@ export interface DotScan {
 }
 
 interface Token {
-  kind: "id" | "string" | "symbol";
+  kind: "id" | "string" | "html" | "symbol";
   value: string;
   start: number;
 }
@@ -45,6 +45,7 @@ export function scanDot(src: string): DotScan {
   let bodyBrace = -1;
   let braceDepth = 0;
   const bracketRoles: Array<"graph" | "other"> = [];
+  let closedBracketRole: "graph" | "other" = "other";
   let layout: Engine | null = null;
   let unsupportedLayout: string | null = null;
 
@@ -60,13 +61,16 @@ export function scanDot(src: string): DotScan {
         const previous = tokens[i - 1];
         bracketRoles.push(
           braceDepth === 1 &&
-            previous?.kind === "id" &&
-            previous.value.toLowerCase() === "graph"
+            ((previous?.kind === "id" &&
+              previous.value.toLowerCase() === "graph") ||
+              (previous?.kind === "symbol" &&
+                previous.value === "]" &&
+                closedBracketRole === "graph"))
             ? "graph"
             : "other",
         );
       } else if (token.value === "]") {
-        bracketRoles.pop();
+        closedBracketRole = bracketRoles.pop() ?? "other";
       }
       continue;
     }
@@ -75,7 +79,6 @@ export function scanDot(src: string): DotScan {
     const inGraphAttributes =
       braceDepth === 1 && bracketRoles[bracketRoles.length - 1] === "graph";
     if (
-      (token.kind !== "id" && token.kind !== "string") ||
       token.value !== "layout" ||
       (!inDirectGraphScope && !inGraphAttributes)
     ) {
@@ -87,7 +90,8 @@ export function scanDot(src: string): DotScan {
     if (
       equals?.kind !== "symbol" ||
       equals.value !== "=" ||
-      (value?.kind !== "id" && value?.kind !== "string")
+      !value ||
+      value.kind === "symbol"
     ) {
       continue;
     }
@@ -111,6 +115,7 @@ export function scanDot(src: string): DotScan {
       layout = null;
       unsupportedLayout = assignedValue;
     }
+    i = valueEnd;
   }
 
   return { bodyBrace, layout, unsupportedLayout };
@@ -119,7 +124,7 @@ export function scanDot(src: string): DotScan {
 function tokenizeDot(src: string): Token[] {
   const tokens: Token[] = [];
 
-  for (let i = 0; i < src.length; ) {
+  for (let i = 0; i < src.length;) {
     const c = src[i];
     if (/\s/.test(c)) {
       i++;
@@ -143,8 +148,16 @@ function tokenizeDot(src: string): Token[] {
       let value = "";
       while (i < src.length && src[i] !== '"') {
         if (src[i] === "\\" && i + 1 < src.length) {
-          value += src[i + 1];
-          i += 2;
+          const next = src[i + 1];
+          if (next === "\n") i += 2;
+          else if (next === "\r" && src[i + 2] === "\n") i += 3;
+          else if (next === '"') {
+            value += next;
+            i += 2;
+          } else {
+            // DOT preserves escapes other than quotes and line continuations.
+            value += src[i++] + src[i++];
+          }
         } else {
           value += src[i++];
         }
@@ -154,7 +167,9 @@ function tokenizeDot(src: string): Token[] {
       continue;
     }
     if (c === "<") {
+      const start = i;
       i = afterHtmlString(src, i);
+      tokens.push({ kind: "html", value: src.slice(start + 1, i - 1), start });
       continue;
     }
     if ("{}[]=;,+".includes(c)) {
@@ -166,7 +181,7 @@ function tokenizeDot(src: string): Token[] {
     while (
       i < src.length &&
       !/\s/.test(src[i]) &&
-      !"{}[]=;,+<>\"".includes(src[i]) &&
+      !'{}[]=;,+<>"'.includes(src[i]) &&
       !(src[i] === "/" && ["/", "*"].includes(src[i + 1]))
     ) {
       i++;
@@ -182,15 +197,21 @@ function tokenizeDot(src: string): Token[] {
 function afterHtmlString(src: string, from: number): number {
   let depth = 0;
   let quote = "";
+  let inTag = false;
   for (let i = from; i < src.length; i++) {
     const c = src[i];
     if (quote) {
       if (c === quote) quote = "";
       continue;
     }
-    if (c === '"' || c === "'") quote = c;
-    else if (c === "<") depth++;
-    else if (c === ">" && --depth === 0) return i + 1;
+    if (inTag && (c === '"' || c === "'")) quote = c;
+    else if (c === "<") {
+      if (i !== from) inTag = true;
+      depth++;
+    } else if (c === ">") {
+      inTag = false;
+      if (--depth === 0) return i + 1;
+    }
   }
   return src.length;
 }

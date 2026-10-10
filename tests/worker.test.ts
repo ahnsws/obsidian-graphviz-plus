@@ -7,7 +7,9 @@ interface WorkerResponse {
   error?: string;
 }
 
-let receive: ((event: { data: { id: number; dot: string; engine: "dot" } }) => void) | null = null;
+let receive:
+  | ((event: { data: { id: number; dot: string; engine: "dot" } }) => void)
+  | null = null;
 let resolveResponse: ((response: WorkerResponse) => void) | null = null;
 
 Object.assign(globalThis, {

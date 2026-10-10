@@ -10,6 +10,7 @@
     "importHelpers": true,
     "isolatedModules": true,
     "strict": true,
+    "types": ["node"],
     "skipLibCheck": true,
     "lib": ["DOM", "ES2018", "ES2019", "ES2020"]
   },

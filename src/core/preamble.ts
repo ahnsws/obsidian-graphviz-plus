@@ -18,7 +18,10 @@ export function extractPreamble(text: string): string {
     let end = i + 1;
     while (end < lines.length && !close.test(lines[end])) end++;
     if (/^(dot|graphviz)?$/i.test(info)) {
-      return lines.slice(i + 1, end).join("\n").trim();
+      return lines
+        .slice(i + 1, end)
+        .join("\n")
+        .trim();
     }
     i = end;
   }

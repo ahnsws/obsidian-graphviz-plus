@@ -1,5 +1,6 @@
 import { Graphviz } from "@hpcc-js/wasm-graphviz";
 import type { Engine } from "../core/dot";
+import { assertDotSize, assertSvgSize } from "../core/limits";
 
 interface RenderRequest {
   id: number;
@@ -21,8 +22,10 @@ function loadGraphviz(): Promise<Graphviz> {
 
 self.onmessage = async ({ data }: MessageEvent<RenderRequest>) => {
   try {
+    assertDotSize(data.dot);
     const graphviz = await loadGraphviz();
     const svg = graphviz.layout(data.dot, "svg", data.engine);
+    assertSvgSize(svg);
     self.postMessage({ id: data.id, svg });
   } catch (error) {
     self.postMessage({

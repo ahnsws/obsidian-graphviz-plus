@@ -72,11 +72,13 @@ export class GraphvizPlusSettingTab extends PluginSettingTab {
       .setDesc("Used by a block that sets no layout= attribute.")
       .addDropdown((dropdown) => {
         ENGINES.forEach((engine) => dropdown.addOption(engine, engine));
-        dropdown.setValue(this.plugin.fallbackEngine).onChange(async (value) => {
-          if (!isEngine(value)) return;
-          this.plugin.settings.defaultEngine = value;
-          await this.plugin.saveSettings();
-        });
+        dropdown
+          .setValue(this.plugin.fallbackEngine)
+          .onChange(async (value) => {
+            if (!isEngine(value)) return;
+            this.plugin.settings.defaultEngine = value;
+            await this.plugin.saveSettings();
+          });
       });
   }
 }

@@ -2,7 +2,7 @@
  *
  * This file covers the block container, the loading line and the error box.
  * Node and edge colors belong in your own CSS snippet:
- * see examples/graphviz.css.
+ * see the CSS styling example in README.md.
  */
 
 .block-language-dot {
